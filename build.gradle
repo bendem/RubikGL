@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+group 'be.bendem.jrubik'
+version '1.0-SNAPSHOT'
+
+project.ext.lwjglVersion = '3.0.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.lwjgl:lwjgl:${lwjglVersion}"
+    //compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-windows"
+    compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-linux"
+    //compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-osx"
+    compile 'org.joml:joml:1.8.0'
+}
+
+build.dependsOn(shadowJar)
+
+shadowJar {
+    mergeServiceFiles()
+    manifest {
+        attributes 'Main-Class': 'be.bendem.jrubik.ui.Rubik'
+    }
+}
