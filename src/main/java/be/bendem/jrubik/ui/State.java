@@ -9,7 +9,9 @@ import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
 public class State {
@@ -57,7 +59,13 @@ public class State {
     }
 
     public void pulse() {
-        final float MOVEMENT = .01f;
+        final float MOVEMENT;
+        if (keysDown.contains(GLFW_KEY_LEFT_CONTROL)
+                || keysDown.contains(GLFW_KEY_RIGHT_CONTROL)) {
+            MOVEMENT = .1f;
+        } else {
+            MOVEMENT = .01f;
+        }
 
         for (int key : keysDown) {
             switch (key) {
