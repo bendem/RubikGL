@@ -177,7 +177,7 @@ public class Rubik {
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, MemoryUtil.NULL);
 
-        // bind parameter 0 to colors array
+        // bind parameter 1 to colors array
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
         glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, MemoryUtil.NULL);
