@@ -33,11 +33,10 @@ public class State {
 
             new Matrix4f().perspective((float) Math.toRadians(45.0), 1, 0.1f, 100.0f)
                 .lookAt(
-                    4, 2, 2,  // Camera position in World Space
+                    4, 4, 4,  // Camera position in World Space
                     0, 0, 0,  // Looks at
-                    0, 1, 0   // Head is at
+                    0, 1, 0   // up direction
                 )
-                //.mul(new Matrix4f().identity())
                 .rotate(xRot, 1, 0, 0)
                 .rotate(yRot, 0, 1, 0)
                 .get(mvpCache);
