@@ -65,6 +65,10 @@ public class Rubik {
             // Free the window callbacks and destroy the window
             Callbacks.glfwFreeCallbacks(window);
             glfwDestroyWindow(window);
+        } catch (Throwable t) {
+            System.err.println("----");
+            t.printStackTrace();
+            System.err.println("----");
         } finally {
             // Terminate GLFW and free the error callback
             glfwTerminate();
