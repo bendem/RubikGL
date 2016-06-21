@@ -59,12 +59,8 @@ public class State {
 
     public void pulse() {
         final float MOVEMENT;
-        if (keysDown.contains(GLFW_KEY_LEFT_CONTROL)
-                || keysDown.contains(GLFW_KEY_RIGHT_CONTROL)) {
-            MOVEMENT = .1f;
-        } else {
-            MOVEMENT = .01f;
-        }
+        MOVEMENT = keysDown.contains(GLFW_KEY_LEFT_CONTROL)
+                || keysDown.contains(GLFW_KEY_RIGHT_CONTROL) ? .1f : .02f;
 
         for (int key : keysDown) {
             switch (key) {

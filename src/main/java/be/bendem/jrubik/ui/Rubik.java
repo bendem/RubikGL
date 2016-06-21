@@ -5,6 +5,8 @@ import be.bendem.jrubik.ui.utils.Point;
 import be.bendem.jrubik.ui.utils.Shader;
 import be.bendem.jrubik.ui.utils.Shaders;
 import be.bendem.jrubik.ui.utils.Shapes;
+import be.bendem.jrubik.utils.Arrays;
+import be.bendem.jrubik.utils.Floats;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -19,37 +21,13 @@ import static org.lwjgl.opengles.GLES30.glGenVertexArrays;
 
 public class Rubik {
 
-    private static float clamp(float min, float value, float max) {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
-    }
-
-    private static float[] concat(float[] array, float[]... arrays) {
-        int newLength = array.length;
-        for (float[] values : arrays) {
-            newLength += values.length;
-        }
-
-        float[] newArray = new float[newLength];
-
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        int current = array.length;
-        for (float[] values : arrays) {
-            System.arraycopy(values, 0, newArray, current, values.length);
-            current += values.length;
-        }
-
-        return newArray;
-    }
-
     private static final float[] colors;
     static {
         colors = new float[6 * 2 * 3 * 3 * 8];
-        for (int i = 0; i < colors.length; i += 9) {
-            colors[i  ] = colors[i+3] = colors[i+6] = clamp(0.4f, (float) Math.random(), 0.9f);
-            colors[i+1] = colors[i+4] = colors[i+7] = clamp(0.4f, (float) Math.random(), 0.9f);
-            colors[i+2] = colors[i+5] = colors[i+8] = clamp(0.4f, (float) Math.random(), 0.9f);
+        for (int i = 0; i < colors.length; i += 18) {
+            colors[i  ] = colors[i+3] = colors[i+6] = colors[i+ 9] = colors[i+12] = colors[i+15] = Floats.clamp(0.4f, (float) Math.random(), 0.9f);
+            colors[i+1] = colors[i+4] = colors[i+7] = colors[i+10] = colors[i+13] = colors[i+16] = Floats.clamp(0.4f, (float) Math.random(), 0.9f);
+            colors[i+2] = colors[i+5] = colors[i+8] = colors[i+11] = colors[i+14] = colors[i+17] = Floats.clamp(0.4f, (float) Math.random(), 0.9f);
         }
     }
 
@@ -154,7 +132,7 @@ public class Rubik {
 
         int matrix = glGetUniformLocation(program, "mvp");
 
-        float[] vertices = concat(
+        float[] vertices = Arrays.concat(
             Shapes.cube(Point.of( -1,  -1,  -1), 0.8f),
             Shapes.cube(Point.of(.2f,  -1,  -1), 0.8f),
             Shapes.cube(Point.of( -1, .2f,  -1), 0.8f),
@@ -194,28 +172,15 @@ public class Rubik {
 
         glUniformMatrix4fv(matrix, false, state.computeMatrix());
 
-        // ?
+        // bind parameter 0 to vertices array
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glVertexAttribPointer(
-            0,                      // attribute 0. No particular reason for 0, but must match the layout in the shader.
-            3,                      // size
-            GL_FLOAT,               // type
-            false,                  // normalized?
-            0,                      // stride
-            MemoryUtil.NULL         // array buffer offset
-        );
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, MemoryUtil.NULL);
 
+        // bind parameter 0 to colors array
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-        glVertexAttribPointer(
-            1,                      // attribute 0. No particular reason for 0, but must match the layout in the shader.
-            3,                      // size
-            GL_FLOAT,               // type
-            false,                  // normalized?
-            0,                      // stride
-            MemoryUtil.NULL         // array buffer offset
-        );
+        glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, MemoryUtil.NULL);
 
         // Draw the triangle
         glDrawArrays(GL_TRIANGLES, 0, vertices.length / 3);
