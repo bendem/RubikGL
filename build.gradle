@@ -1,16 +1,19 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'application'
 }
 
 group 'be.bendem.jrubik'
 version '1.0-SNAPSHOT'
 
 project.ext.lwjglVersion = '3.0.0'
+project.ext.mainClassName = mainClassName = 'be.bendem.jrubik.ui.Rubik'
 
 sourceCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -25,8 +28,7 @@ dependencies {
 build.dependsOn(shadowJar)
 
 shadowJar {
-    mergeServiceFiles()
     manifest {
-        attributes 'Main-Class': 'be.bendem.jrubik.ui.Rubik'
+        attributes 'Main-Class': "${mainClassName}"
     }
 }
