@@ -34,7 +34,6 @@ public class Rubik {
         cubes.add(Cube.builder().x(-1).y( 1).z( 0).right(GREEN).top(WHITE).build());
 
         cubes.add(Cube.builder().x( 1).y( 0).z( 0).left(BLUE).build());
-        cubes.add(Cube.builder().x( 0).y( 0).z( 0).build());
         cubes.add(Cube.builder().x(-1).y( 0).z( 0).right(GREEN).build());
 
         cubes.add(Cube.builder().x( 1).y(-1).z( 0).left(BLUE).bottom(YELLOW).build());
