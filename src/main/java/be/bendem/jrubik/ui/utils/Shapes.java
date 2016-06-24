@@ -21,44 +21,54 @@ public class Shapes {
         };
     }
 
-    public static float[] cube(Point p, float size) {
+    public static float[] rect(Point p, float size) {
+        return rect(p, size, size, size);
+    }
+
+    public static float[] rect(Point p, float xSize, float ySize, float zSize) {
         return new float[] {
-            p.x()       , p.y()       , p.z()       ,
-            p.x()       , p.y()       , p.z() + size,
-            p.x()       , p.y() + size, p.z() + size,
-            p.x() + size, p.y() + size, p.z()       ,
-            p.x()       , p.y()       , p.z()       ,
-            p.x()       , p.y() + size, p.z()       ,
-            p.x() + size, p.y()       , p.z() + size,
-            p.x()       , p.y()       , p.z()       ,
-            p.x() + size, p.y()       , p.z()       ,
-            p.x() + size, p.y() + size, p.z()       ,
-            p.x() + size, p.y()       , p.z()       ,
-            p.x()       , p.y()       , p.z()       ,
-            p.x()       , p.y()       , p.z()       ,
-            p.x()       , p.y() + size, p.z() + size,
-            p.x()       , p.y() + size, p.z()       ,
-            p.x() + size, p.y()       , p.z() + size,
-            p.x()       , p.y()       , p.z() + size,
-            p.x()       , p.y()       , p.z()       ,
-            p.x()       , p.y() + size, p.z() + size,
-            p.x()       , p.y()       , p.z() + size,
-            p.x() + size, p.y()       , p.z() + size,
-            p.x() + size, p.y() + size, p.z() + size,
-            p.x() + size, p.y()       , p.z()       ,
-            p.x() + size, p.y() + size, p.z()       ,
-            p.x() + size, p.y()       , p.z()       ,
-            p.x() + size, p.y() + size, p.z() + size,
-            p.x() + size, p.y()       , p.z() + size,
-            p.x() + size, p.y() + size, p.z() + size,
-            p.x() + size, p.y() + size, p.z()       ,
-            p.x()       , p.y() + size, p.z()       ,
-            p.x() + size, p.y() + size, p.z() + size,
-            p.x()       , p.y() + size, p.z()       ,
-            p.x()       , p.y() + size, p.z() + size,
-            p.x() + size, p.y() + size, p.z() + size,
-            p.x()       , p.y() + size, p.z() + size,
-            p.x() + size, p.y()       , p.z() + size,
+            // Left
+            p.x()        , p.y()        , p.z()        ,
+            p.x()        , p.y()        , p.z() + zSize,
+            p.x()        , p.y() + ySize, p.z() + zSize,
+            p.x()        , p.y()        , p.z()        ,
+            p.x()        , p.y() + ySize, p.z() + zSize,
+            p.x()        , p.y() + ySize, p.z()        ,
+            // Right
+            p.x() + xSize, p.y() + ySize, p.z() + zSize,
+            p.x() + xSize, p.y()        , p.z()        ,
+            p.x() + xSize, p.y() + ySize, p.z()        ,
+            p.x() + xSize, p.y()        , p.z()        ,
+            p.x() + xSize, p.y() + ySize, p.z() + zSize,
+            p.x() + xSize, p.y()        , p.z() + zSize,
+            // Top
+            p.x() + xSize, p.y() + ySize, p.z() + zSize,
+            p.x() + xSize, p.y() + ySize, p.z()        ,
+            p.x()        , p.y() + ySize, p.z()        ,
+            p.x() + xSize, p.y() + ySize, p.z() + zSize,
+            p.x()        , p.y() + ySize, p.z()        ,
+            p.x()        , p.y() + ySize, p.z() + zSize,
+            // Bottom
+            p.x() + xSize, p.y()        , p.z() + zSize,
+            p.x()        , p.y()        , p.z()        ,
+            p.x() + xSize, p.y()        , p.z()        ,
+            p.x() + xSize, p.y()        , p.z() + zSize,
+            p.x()        , p.y()        , p.z() + zSize,
+            p.x()        , p.y()        , p.z()        ,
+            // Front
+            p.x()        , p.y() + ySize, p.z() + zSize,
+            p.x()        , p.y()        , p.z() + zSize,
+            p.x() + xSize, p.y()        , p.z() + zSize,
+            p.x() + xSize, p.y() + ySize, p.z() + zSize,
+            p.x()        , p.y() + ySize, p.z() + zSize,
+            p.x() + xSize, p.y()        , p.z() + zSize,
+            // Back
+            p.x() + xSize, p.y() + ySize, p.z()        ,
+            p.x()        , p.y()        , p.z()        ,
+            p.x()        , p.y() + ySize, p.z()        ,
+            p.x() + xSize, p.y() + ySize, p.z()        ,
+            p.x() + xSize, p.y()        , p.z()        ,
+            p.x()        , p.y()        , p.z()        ,
         };
     }
 }

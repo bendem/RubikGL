@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class Point {
 
-    public static Point of(float x, float y, float z) {
+    public static Point at(float x, float y, float z) {
         return new Point(x, y, z);
     }
 
-    public static Point of(float xyz) {
+    public static Point at(float xyz) {
         return new Point(xyz, xyz, xyz);
     }
 

@@ -1,16 +1,21 @@
-package be.bendem.jrubik.ui.utils;
+package be.bendem.jrubik.core;
 
 import java.util.Arrays;
 
 public class Color {
 
+    public static final Color WHITE = new Color(1, 1, 1);
+    public static final Color BLACK = new Color(0, 0, 0);
+    public static final Color RED = new Color(1, 0, 0);
+    public static final Color GREEN = new Color(0, 1, 0);
+    public static final Color BLUE = new Color(0, 0, 1);
+    public static final Color ORANGE = new Color(1, 0.549f, 0);
+    public static final Color YELLOW = new Color(1, 0.918f, 0);
+
     private final float[] color;
 
     public Color(float red, float green, float blue) {
-        color = new float[3];
-        color[0] = red;
-        color[1] = green;
-        color[2] = blue;
+        color = new float[] { red, green, blue };
     }
 
     public float[] array() {
@@ -40,5 +45,12 @@ public class Color {
     @Override
     public int hashCode() {
         return Arrays.hashCode(color);
+    }
+
+    @Override
+    public String toString() {
+        return "Color{" +
+            "color=" + Arrays.toString(color) +
+            '}';
     }
 }

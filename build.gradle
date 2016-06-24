@@ -8,7 +8,7 @@ group 'be.bendem.jrubik'
 version '1.0-SNAPSHOT'
 
 project.ext.lwjglVersion = '3.0.0'
-project.ext.mainClassName = mainClassName = 'be.bendem.jrubik.ui.Rubik'
+project.ext.mainClassName = mainClassName = 'be.bendem.jrubik.ui.UI'
 
 sourceCompatibility = 1.8
 

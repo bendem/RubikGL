@@ -27,13 +27,13 @@ public class State {
         mvpCache = BufferUtils.createFloatBuffer(16);
     }
 
-    public FloatBuffer computeMatrix() {
+    public FloatBuffer computeMvpMatrix() {
         if (dirty) {
             mvpCache.clear();
 
             new Matrix4f().perspective((float) Math.toRadians(45.0), 1, 0.1f, 100.0f)
                 .lookAt(
-                    4, 4, 4,  // Camera position in World Space
+                    2, 2, 4,  // Camera position in World Space
                     0, 0, 0,  // Looks at
                     0, 1, 0   // up direction
                 )
