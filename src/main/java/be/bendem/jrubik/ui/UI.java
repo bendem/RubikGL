@@ -21,11 +21,17 @@ public class UI {
     // The window handle
     private long window;
     private final Rubik rubik = new Rubik();
-    private final State state = new State();
+    private final Keyboard keyboard;
+    private final State state;
+
+    public UI() {
+        init();
+        keyboard = new Keyboard(window);
+        state = new State(keyboard);
+    }
 
     public void run() {
         try {
-            init();
             loop();
 
             // Free the window callbacks and destroy the window
@@ -68,22 +74,6 @@ public class UI {
             throw new RuntimeException("Failed to create the GLFW window");
         }
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scanCode, action, mods) -> {
-            switch (action) {
-            case GLFW_PRESS:
-                state.keyDown(key);
-                break;
-            case GLFW_RELEASE:
-                if (key == GLFW_KEY_ESCAPE || key == GLFW_KEY_Q || key == GLFW_KEY_A) { // Fuck qwerty
-                    glfwSetWindowShouldClose(window, true);
-                } else {
-                    state.keyUp(key);
-                }
-                break;
-            }
-        });
-
         // Get the resolution of the primary monitor
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Center our window
@@ -121,7 +111,7 @@ public class UI {
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
 
-            state.pulse();
+            keyboard.pulse();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
