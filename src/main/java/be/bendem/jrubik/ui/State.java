@@ -10,6 +10,7 @@ import java.util.Set;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
@@ -33,7 +34,7 @@ public class State {
 
             new Matrix4f().perspective((float) Math.toRadians(45.0), 1, 0.1f, 100.0f)
                 .lookAt(
-                    2, 2, 4,  // Camera position in World Space
+                    1, 1, 5,  // Camera position in World Space
                     0, 0, 0,  // Looks at
                     0, 1, 0   // up direction
                 )
@@ -78,6 +79,11 @@ public class State {
                 break;
             case GLFW_KEY_DOWN:
                 xRot -= MOVEMENT;
+                dirty = true;
+                break;
+            case GLFW_KEY_R:
+                xRot = 0;
+                yRot = 0;
                 dirty = true;
                 break;
             }
