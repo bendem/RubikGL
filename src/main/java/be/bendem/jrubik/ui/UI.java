@@ -116,13 +116,14 @@ public class UI {
         renderer.init();
 
         glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
 
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
 
             state.pulse();
 
-            glClear(GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             rubik.cubes().forEach(cube -> renderer.render(state, cube));
 
