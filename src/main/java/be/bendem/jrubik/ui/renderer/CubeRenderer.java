@@ -25,6 +25,8 @@ public class CubeRenderer implements Renderer<Cube> {
     private static final float CUBE_NEGATIVE_ORIGIN2 = CUBE_SIZE * -0.5f;
     private static final float CUBE_POSITIVE_ORIGIN = CUBE_SIZE * 0.5f + GAP;
 
+    private final float[] vertices = new float[108];
+    private final float[] colors = new float[108];
     private int program;
     private int matrix;
     private int vertexBuffer;
@@ -45,7 +47,7 @@ public class CubeRenderer implements Renderer<Cube> {
 
     @Override
     public void render(State state, Cube cube) {
-        float[] vertices = Shapes.rect(normalizePosition(cube.position()), CUBE_SIZE);
+        Shapes.rect(normalizePosition(cube.position()), CUBE_SIZE, vertices);
         float[] colors = applyOrientation(cube.colors(), cube.orientation());
 
         // TODO Move to #init
@@ -89,20 +91,16 @@ public class CubeRenderer implements Renderer<Cube> {
         }
     }
 
-    private float[] applyOrientation(Map<Face, Color> colors, Orientation orientation) {
-        // a face: 2 triangles, a triangle: 3 points, a point: 3 colors
-        // order of the output array: Left, Back, Bottom, Front, Right, Top
-        float[] out = new float[18 * 6];
-
-        colors.forEach((face, color) -> {
+    private float[] applyOrientation(Map<Face, Color> colorPerFace, Orientation orientation) {
+        colorPerFace.forEach((face, color) -> {
             int i = getIndexForOrientation(face, orientation);
-            float[] colorArray = color.array();
-            for (int triangle = 0; triangle < 6; triangle++) {
-                System.arraycopy(colorArray, 0, out, i + 3 * triangle, 3);
+            color.array(colors, i);
+            for (int triangle = 1; triangle < 6; triangle++) {
+                System.arraycopy(colors, i, colors, i + 3 * triangle, 3);
             }
         });
 
-        return out;
+        return colors;
     }
 
     private int getIndexForOrientation(Face face, Orientation orientation) {

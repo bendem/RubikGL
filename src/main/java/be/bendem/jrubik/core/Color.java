@@ -22,6 +22,15 @@ public class Color {
         return Arrays.copyOf(color, 3);
     }
 
+    public float[] array(float[] out) {
+        return array(out, 0);
+    }
+
+    public float[] array(float[] out, int offset) {
+        System.arraycopy(color, 0, out, offset, 3);
+        return out;
+    }
+
     public float red() {
         return color[0];
     }
