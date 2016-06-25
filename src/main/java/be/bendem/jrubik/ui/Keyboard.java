@@ -1,10 +1,6 @@
 package be.bendem.jrubik.ui;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
@@ -19,16 +15,34 @@ public class Keyboard {
         void handle();
     }
 
+    public enum Event {
+        KEY_PRESSED, KEY_RELEASED, KEY_HELD
+    }
+
+    public class HandlerRegistration {
+        private final Collection<Handler> handlers;
+
+        public HandlerRegistration(Collection<Handler> handlers) {
+            this.handlers = handlers;
+        }
+
+        public HandlerRegistration clear() {
+            handlers.clear();
+            return this;
+        }
+
+        public HandlerRegistration add(Handler handler) {
+            handlers.add(handler);
+            return this;
+        }
+    }
+
     private final Set<Integer> keysDown;
-    private final Map<Integer, Set<Handler>> onHold;
-    private final Map<Integer, Set<Handler>> onPress;
-    private final Map<Integer, Set<Handler>> onRelease;
+    private final Map<Event, Map<Integer, Collection<Handler>>> handlers;
 
     public Keyboard(long window) {
         keysDown = new HashSet<>();
-        onHold = new HashMap<>();
-        onPress = new HashMap<>();
-        onRelease = new HashMap<>();
+        handlers = new EnumMap<>(Event.class);
 
         glfwSetKeyCallback(window, (win, key, scanCode, action, mods) -> {
             switch (action) {
@@ -41,19 +55,21 @@ public class Keyboard {
             }
         });
 
-        onRelease(GLFW_KEY_ESCAPE, () -> glfwSetWindowShouldClose(window, true));
+        on(Event.KEY_PRESSED, GLFW_KEY_ESCAPE).add(() -> glfwSetWindowShouldClose(window, true));
     }
 
     private void keyDown(int key) {
         keysDown.add(key);
-        onPress
+        handlers
+            .getOrDefault(Event.KEY_PRESSED, Collections.emptyMap())
             .getOrDefault(key, Collections.emptySet())
             .forEach(Handler::handle);
     }
 
     private void keyUp(int key) {
         keysDown.remove(key);
-        onRelease
+        handlers
+            .getOrDefault(Event.KEY_RELEASED, Collections.emptyMap())
             .getOrDefault(key, Collections.emptySet())
             .forEach(Handler::handle);
     }
@@ -62,24 +78,22 @@ public class Keyboard {
         return keysDown.contains(key);
     }
 
-    public void onHold(int key, Handler handler) {
-        onHold.computeIfAbsent(key, k -> new HashSet<>()).add(handler);
-    }
-
-    public void onPress(int key, Handler handler) {
-        onPress.computeIfAbsent(key, k -> new HashSet<>()).add(handler);
-    }
-
-    public void onRelease(int key, Handler handler) {
-        onRelease.computeIfAbsent(key, k -> new HashSet<>()).add(handler);
+    public HandlerRegistration on(Event event, int key) {
+        return new HandlerRegistration(
+            handlers
+                .computeIfAbsent(event, e -> new HashMap<>())
+                .computeIfAbsent(key, k -> new HashSet<>()));
     }
 
     public void pulse() {
-        for (Integer key : keysDown) {
-            onHold
-                .getOrDefault(key, Collections.emptySet())
-                .forEach(Handler::handle);
-        }
+        Map<Integer, Collection<Handler>> onHold = handlers
+            .getOrDefault(Event.KEY_HELD, Collections.emptyMap());
+
+        onHold.forEach((key, handlers) -> {
+            if (keysDown.contains(key)) {
+                handlers.forEach(Handler::handle);
+            }
+        });
     }
 
 }

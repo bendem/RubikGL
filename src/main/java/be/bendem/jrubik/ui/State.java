@@ -5,6 +5,8 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
+import static be.bendem.jrubik.ui.Keyboard.Event.KEY_HELD;
+import static be.bendem.jrubik.ui.Keyboard.Event.KEY_PRESSED;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
@@ -23,11 +25,11 @@ public class State {
     public State(Keyboard keyboard) {
         mvpCache = BufferUtils.createFloatBuffer(16);
 
-        keyboard.onHold(GLFW_KEY_DOWN, () -> xRot += getMovement(keyboard));
-        keyboard.onHold(GLFW_KEY_UP, () -> xRot -= getMovement(keyboard));
-        keyboard.onHold(GLFW_KEY_RIGHT, () -> yRot += getMovement(keyboard));
-        keyboard.onHold(GLFW_KEY_LEFT, () -> yRot -= getMovement(keyboard));
-        keyboard.onPress(GLFW_KEY_R, () -> {
+        keyboard.on(KEY_HELD, GLFW_KEY_DOWN).add(() -> xRot += getMovement(keyboard));
+        keyboard.on(KEY_HELD, GLFW_KEY_UP).add(() -> xRot -= getMovement(keyboard));
+        keyboard.on(KEY_HELD, GLFW_KEY_RIGHT).add(() -> yRot += getMovement(keyboard));
+        keyboard.on(KEY_HELD, GLFW_KEY_LEFT).add(() -> yRot -= getMovement(keyboard));
+        keyboard.on(KEY_PRESSED, GLFW_KEY_R).add(() -> {
             xRot = yRot = 0;
             dirty = true;
         });
