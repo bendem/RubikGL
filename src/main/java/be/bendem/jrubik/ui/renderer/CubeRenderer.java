@@ -12,7 +12,6 @@ import be.bendem.jrubik.ui.utils.Shaders;
 import be.bendem.jrubik.ui.utils.Shapes;
 import org.lwjgl.system.MemoryUtil;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import static org.lwjgl.opengles.GLES20.*;
@@ -98,8 +97,8 @@ public class CubeRenderer implements Renderer<Cube> {
         colors.forEach((face, color) -> {
             int i = getIndexForOrientation(face, orientation);
             float[] colorArray = color.array();
-            for (int triangle = 0; triangle < 2; triangle++) {
-                System.arraycopy(colorArray, 0, out, i * triangle, 3);
+            for (int triangle = 0; triangle < 6; triangle++) {
+                System.arraycopy(colorArray, 0, out, i + 3 * triangle, 3);
             }
         });
 
