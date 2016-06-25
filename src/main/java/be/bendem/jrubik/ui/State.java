@@ -45,9 +45,14 @@ public class State {
         if (dirty) {
             mvpCache.clear();
 
-            new Matrix4f().perspective((float) Math.toRadians(45.0), 1, 0.1f, 100.0f)
+            new Matrix4f()
+                .perspective(
+                    (float) Math.toRadians(45.0),
+                    (float) UI.WIDTH / UI.HEIGHT,
+                    0.1f, 100.0f
+                )
                 .lookAt(
-                    1, 1, 5,  // Camera position in World Space
+                    1, 1, 3,  // Camera position in World Space
                     0, 0, 0,  // Looks at
                     0, 1, 0   // up direction
                 )

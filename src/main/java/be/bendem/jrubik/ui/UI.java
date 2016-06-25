@@ -18,6 +18,9 @@ import static org.lwjgl.opengles.GLES30.glGenVertexArrays;
 
 public class UI {
 
+    static final int WIDTH = 700;
+    static final int HEIGHT = 600;
+
     // The window handle
     private long window;
     private final Rubik rubik = new Rubik();
@@ -64,9 +67,6 @@ public class UI {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-        int WIDTH = 800;
-        int HEIGHT = 800;
 
         // Create the window
         window = glfwCreateWindow(WIDTH, HEIGHT, "YOLO!", MemoryUtil.NULL, MemoryUtil.NULL);
