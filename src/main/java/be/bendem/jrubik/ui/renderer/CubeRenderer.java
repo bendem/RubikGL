@@ -45,8 +45,8 @@ public class CubeRenderer implements Renderer<Cube> {
 
     @Override
     public void render(State state, Cube cube) {
-        float[] vertices = Shapes.rect(normalizePosition(cube.getPosition()), CUBE_SIZE);
-        float[] colors = applyOrientation(cube.getColors(), cube.getOrientation());
+        float[] vertices = Shapes.rect(normalizePosition(cube.position()), CUBE_SIZE);
+        float[] colors = applyOrientation(cube.colors(), cube.orientation());
 
         // TODO Move to #init
 

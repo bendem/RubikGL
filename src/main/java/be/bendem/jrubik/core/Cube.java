@@ -95,19 +95,19 @@ public class Cube {
         this.orientation = orientation;
     }
 
-    public Map<Face, Color> getColors() {
+    public Map<Face, Color> colors() {
         return colors;
     }
 
-    public Position getPosition() {
+    public Position position() {
         return position;
     }
 
-    public Orientation getOrientation() {
+    public Orientation orientation() {
         return orientation;
     }
 
-    public Cube setOrientation(Orientation orientation) {
+    public Cube orientation(Orientation orientation) {
         this.orientation = orientation;
         return this;
     }
