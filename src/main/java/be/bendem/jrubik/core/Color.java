@@ -1,8 +1,10 @@
 package be.bendem.jrubik.core;
 
+import be.bendem.jrubik.utils.ArrayBaked;
+
 import java.util.Arrays;
 
-public class Color {
+public class Color implements ArrayBaked {
 
     public static final Color WHITE = new Color(1, 1, 1);
     public static final Color BLACK = new Color(0, 0, 0);
@@ -18,17 +20,14 @@ public class Color {
         color = new float[] { red, green, blue };
     }
 
+    @Override
     public float[] array() {
-        return Arrays.copyOf(color, 3);
+        return Arrays.copyOf(color, color.length);
     }
 
-    public float[] array(float[] out) {
-        return array(out, 0);
-    }
-
+    @Override
     public float[] array(float[] out, int offset) {
-        System.arraycopy(color, 0, out, offset, 3);
-        return out;
+        return ArrayBaked.copy(color, out, offset);
     }
 
     public float red() {
