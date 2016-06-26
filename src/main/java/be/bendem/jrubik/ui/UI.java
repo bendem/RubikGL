@@ -30,7 +30,7 @@ public class UI {
     public UI() {
         init();
         keyboard = new Keyboard(window);
-        state = new State(keyboard);
+        state = new State(window, keyboard);
     }
 
     public void run() {

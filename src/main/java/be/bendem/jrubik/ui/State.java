@@ -2,6 +2,7 @@ package be.bendem.jrubik.ui;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengles.GLES20;
 
 import java.nio.FloatBuffer;
 
@@ -14,6 +15,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 
 public class State {
 
@@ -21,9 +23,19 @@ public class State {
     private boolean dirty = true;
     private float xRot = 0;
     private float yRot = 0;
+    private int width = UI.WIDTH;
+    private int height = UI.HEIGHT;
 
-    public State(Keyboard keyboard) {
+    public State(long window, Keyboard keyboard) {
         mvpCache = BufferUtils.createFloatBuffer(16);
+
+        glfwSetWindowSizeCallback(window, (w, width, height) -> {
+            System.out.printf("Window %d got resized to %d:%d%n", w, width, height);
+            this.width = width;
+            this.height = height;
+            GLES20.glViewport(0, 0, width, height);
+            dirty = true;
+        });
 
         keyboard.on(KEY_HELD, GLFW_KEY_DOWN).add(() -> xRot += getMovement(keyboard));
         keyboard.on(KEY_HELD, GLFW_KEY_UP).add(() -> xRot -= getMovement(keyboard));
@@ -48,7 +60,7 @@ public class State {
             new Matrix4f()
                 .perspective(
                     (float) Math.toRadians(45.0),
-                    (float) UI.WIDTH / UI.HEIGHT,
+                    (float) width / height,
                     0.1f, 100.0f
                 )
                 .lookAt(
