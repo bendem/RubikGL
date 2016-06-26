@@ -17,10 +17,7 @@ public class Point implements ArrayBaked {
     private final float[] coords;
 
     private Point(float x, float y, float z) {
-        coords = new float[3];
-        coords[0] = x;
-        coords[1] = y;
-        coords[2] = z;
+        coords = new float[] { x, y, z };
     }
 
     public float x() {
