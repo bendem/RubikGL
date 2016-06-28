@@ -16,7 +16,7 @@ public class Slice {
         return plane;
     }
 
-    public int slice() {
+    public int offset() {
         return offset;
     }
 
