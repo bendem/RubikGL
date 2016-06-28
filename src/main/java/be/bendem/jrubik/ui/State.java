@@ -14,8 +14,8 @@ import java.nio.FloatBuffer;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static be.bendem.jrubik.ui.Keyboard.Event.KEY_HELD;
 import static be.bendem.jrubik.ui.Keyboard.Event.KEY_PRESSED;
@@ -63,18 +63,19 @@ public class State {
         keyboard.on(KEY_HELD, GLFW_KEY_RIGHT).add(() -> yRot += getMovement(keyboard));
         keyboard.on(KEY_HELD, GLFW_KEY_LEFT).add(() -> yRot -= getMovement(keyboard));
         keyboard.on(KEY_PRESSED, GLFW_KEY_R).add(() -> {
+            rubik.reset();
+            animations.clear();
+            currentAnimation = null;
             xRot = yRot = 0;
             dirty = true;
         });
         keyboard.on(KEY_PRESSED, GLFW_KEY_SPACE).add(this::rotate);
     }
 
+    private final Random random = new Random(1);
     private void rotate() {
-        Slice slice = new Slice(Plane.XY, 0);
-        animations.add(new Animation(
-            rubik.forSlice(slice).collect(Collectors.toSet()),
-            slice,
-            () -> rubik.rotate(slice, null)));
+        Slice slice = new Slice(Plane.values()[random.nextInt(3)], random.nextInt(2) - 1);
+        animations.add(new Animation(rubik, slice, () -> rubik.rotate(slice, null)));
     }
 
     private float getMovement(Keyboard keyboard) {

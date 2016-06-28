@@ -1,35 +1,17 @@
 package be.bendem.jrubik.core;
 
-import be.bendem.jrubik.utils.IntArrayBaked;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Arrays;
+public class Rotation {
 
-public class Rotation implements IntArrayBaked {
+    private enum Axis { X, Y, Z }
 
-    private final int[] vector;
+    // This, is a leak.
+    private final List<Axis> rotations;
 
     public Rotation() {
-        this(0, 0, 0);
-    }
-
-    public Rotation(int x, int y, int z) {
-        assert x >= 0 && x < 4;
-        assert y >= 0 && y < 4;
-        assert z >= 0 && z < 4;
-
-        vector = new int[] { x, y, z };
-    }
-
-    public int x() {
-        return vector[0];
-    }
-
-    public int y() {
-        return vector[1];
-    }
-
-    public int z() {
-        return vector[2];
+        rotations = new ArrayList<>();
     }
 
     public Rotation rotate(Plane plane) {
@@ -42,42 +24,35 @@ public class Rotation implements IntArrayBaked {
     }
 
     public Rotation rotateX() {
-        vector[0] = vector[0] + 1 & 0b11;
+        rotations.add(Axis.X);
         return this;
     }
 
     public Rotation rotateY() {
-        vector[1] = vector[1] + 1 & 0b11;
+        rotations.add(Axis.Y);
         return this;
     }
 
     public Rotation rotateZ() {
-        vector[2] = vector[2] + 1 & 0b11;
+        rotations.add(Axis.Z);
         return this;
     }
 
     public Face apply(Face face) {
-        for (int i = 0; i < x(); i++) {
-            face = face.nextYZ();
-        }
-        for (int i = 0; i < y(); i++) {
-            face = face.nextXZ();
-        }
-        for (int i = 0; i < z(); i++) {
-            face = face.nextXY();
+        for (Axis rotation : rotations) {
+            switch (rotation) {
+            case X: face = face.nextYZ(); break;
+            case Y: face = face.nextXZ(); break;
+            case Z: face = face.nextXY(); break;
+            }
         }
         return face;
     }
 
     @Override
-    public int[] weakArray() {
-        return vector;
-    }
-
-    @Override
     public String toString() {
         return "Rotation{" +
-            "vector=" + Arrays.toString(vector) +
+            "rotations=" + rotations +
             '}';
     }
 }

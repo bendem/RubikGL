@@ -22,6 +22,11 @@ public class Rubik {
 
     public Rubik() {
         cubes = new ArrayList<>(27);
+        reset();
+    }
+
+    public void reset() {
+        cubes.clear();
         cubes.add(Cube.builder().x( 1).y( 1).z(-1).right(GREEN).top(WHITE).back(RED).build());
         cubes.add(Cube.builder().x( 0).y( 1).z(-1).top(WHITE).back(RED).build());
         cubes.add(Cube.builder().x(-1).y( 1).z(-1).left(BLUE).top(WHITE).back(RED).build());
@@ -68,6 +73,8 @@ public class Rubik {
     }
 
     public Rubik rotate(Slice slice, Direction direction) {
+        System.out.printf("rotation: %s%n", slice);
+
         Matrix3f rotation = Matrices.rotation(slice.plane(), (float) (Math.PI * .5), new Matrix3f());
         forSlice(slice)
             .forEach(c -> {

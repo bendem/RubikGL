@@ -1,6 +1,7 @@
 package be.bendem.jrubik.ui;
 
 import be.bendem.jrubik.core.Cube;
+import be.bendem.jrubik.core.Rubik;
 import be.bendem.jrubik.core.Slice;
 import be.bendem.jrubik.ui.renderer.CubeRenderer;
 import be.bendem.jrubik.ui.utils.Matrices;
@@ -8,12 +9,12 @@ import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
 import java.nio.FloatBuffer;
-import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Animation extends CubeRenderer {
 
-    private final Set<Cube> cubes;
+    private final Rubik rubik;
     private final Slice slice;
     private final Action done;
     private float tick = 0;
@@ -22,14 +23,14 @@ public class Animation extends CubeRenderer {
         void whenDone();
     }
 
-    public Animation(Set<Cube> cubes, Slice slice, Action done) {
-        this.cubes = cubes;
+    public Animation(Rubik rubik, Slice slice, Action done) {
+        this.rubik = rubik;
         this.slice = slice;
         this.done = done;
     }
 
     public void tick() {
-        tick += 0.02;
+        tick += 0.05;
 
         if (tick > 1) {
             done.whenDone();
@@ -62,7 +63,7 @@ public class Animation extends CubeRenderer {
     }
 
     public Set<Cube> cubes() {
-        return Collections.unmodifiableSet(cubes);
+        return rubik.forSlice(slice).collect(Collectors.toSet());
     }
 
 }
