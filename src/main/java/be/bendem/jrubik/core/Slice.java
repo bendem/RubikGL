@@ -6,6 +6,8 @@ public class Slice {
     private final int offset;
 
     public Slice(Plane plane, int offset) {
+        assert offset >= -1 && offset <= 1;
+
         this.plane = plane;
         this.offset = offset;
     }

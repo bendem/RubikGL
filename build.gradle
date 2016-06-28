@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
+//    id 'com.ewerk.gradle.plugins.dagger' version '1.0.3'
     id 'application'
 }
 
