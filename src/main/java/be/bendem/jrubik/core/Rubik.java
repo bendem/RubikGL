@@ -71,7 +71,6 @@ public class Rubik {
         Matrix3f rotation = Matrices.rotation(slice.plane(), (float) (Math.PI * .5), new Matrix3f());
         forSlice(slice)
             .forEach(c -> {
-                // TODO Update position
                 Position position = c.position();
                 Vector3f rotated = new Vector3f(
                     position.x(), position.y(), position.z())
