@@ -7,6 +7,10 @@ public interface Renderer<T> extends AutoCloseable {
 
     void init();
 
-    void render(State state, T t);
+    float[] prepare(State state, T t);
+
+    void render(State state, float[] vertices);
+
+    default void cleanup() {}
 
 }

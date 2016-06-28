@@ -1,9 +1,6 @@
 package be.bendem.jrubik.ui;
 
-import be.bendem.jrubik.core.Cube;
 import be.bendem.jrubik.core.Rubik;
-import be.bendem.jrubik.ui.renderer.CubeRenderer;
-import be.bendem.jrubik.ui.renderer.Renderer;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -11,7 +8,14 @@ import org.lwjgl.opengles.GLES;
 import org.lwjgl.system.MemoryUtil;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengles.GLES20.*;
+import static org.lwjgl.opengles.GLES20.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengles.GLES20.GL_CULL_FACE;
+import static org.lwjgl.opengles.GLES20.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengles.GLES20.GL_DEPTH_TEST;
+import static org.lwjgl.opengles.GLES20.GL_TRUE;
+import static org.lwjgl.opengles.GLES20.glClear;
+import static org.lwjgl.opengles.GLES20.glClearColor;
+import static org.lwjgl.opengles.GLES20.glEnable;
 import static org.lwjgl.opengles.GLES30.glBindVertexArray;
 import static org.lwjgl.opengles.GLES30.glDeleteVertexArrays;
 import static org.lwjgl.opengles.GLES30.glGenVertexArrays;
@@ -23,14 +27,15 @@ public class UI {
 
     // The window handle
     private long window;
-    private final Rubik rubik = new Rubik();
+    private final Rubik rubik;
     private final Keyboard keyboard;
     private final State state;
 
     public UI() {
         init();
+        rubik = new Rubik();
         keyboard = new Keyboard(window);
-        state = new State(window, keyboard);
+        state = new State(rubik, keyboard, window);
     }
 
     public void run() {
@@ -102,20 +107,19 @@ public class UI {
         int vertexArray = glGenVertexArrays();
         glBindVertexArray(vertexArray);
 
-        Renderer<Cube> renderer = new CubeRenderer();
-        renderer.init();
-
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
+
+        state.init();
 
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
 
-            keyboard.pulse();
+            state.tick();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            rubik.cubes().forEach(cube -> renderer.render(state, cube));
+            state.render();
 
             // TODO Draw fps?
             glfwSwapBuffers(window);
@@ -123,7 +127,7 @@ public class UI {
             // TODO FPS cap?
         }
 
-        renderer.close();
+        state.close();
         glDeleteVertexArrays(vertexArray);
     }
 

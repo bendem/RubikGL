@@ -1,10 +1,21 @@
 package be.bendem.jrubik.ui;
 
+import be.bendem.jrubik.core.Cube;
+import be.bendem.jrubik.core.Plane;
+import be.bendem.jrubik.core.Rubik;
+import be.bendem.jrubik.core.Slice;
+import be.bendem.jrubik.ui.renderer.CubeRenderer;
+import be.bendem.jrubik.ui.renderer.Renderer;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengles.GLES20;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static be.bendem.jrubik.ui.Keyboard.Event.KEY_HELD;
 import static be.bendem.jrubik.ui.Keyboard.Event.KEY_PRESSED;
@@ -14,19 +25,29 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 
 public class State {
 
+    private final Rubik rubik;
+    private final Keyboard keyboard;
+    private final Deque<Animation> animations;
+    private final Renderer<Cube> cubeRenderer;
     private final FloatBuffer mvpCache;
     private boolean dirty = true;
     private float xRot = 0;
     private float yRot = 0;
     private int width = UI.WIDTH;
     private int height = UI.HEIGHT;
+    private Animation currentAnimation;
 
-    public State(long window, Keyboard keyboard) {
+    public State(Rubik rubik, Keyboard keyboard, long window) {
+        this.rubik = rubik;
+        this.keyboard = keyboard;
+        animations = new ArrayDeque<>();
+        cubeRenderer = new CubeRenderer();
         mvpCache = BufferUtils.createFloatBuffer(16);
 
         glfwSetWindowSizeCallback(window, (w, width, height) -> {
@@ -45,6 +66,15 @@ public class State {
             xRot = yRot = 0;
             dirty = true;
         });
+        keyboard.on(KEY_PRESSED, GLFW_KEY_SPACE).add(this::rotate);
+    }
+
+    private void rotate() {
+        Slice slice = new Slice(Plane.XY, 0);
+        animations.add(new Animation(
+            rubik.forSlice(slice).collect(Collectors.toSet()),
+            slice,
+            () -> rubik.rotate(slice, null)));
     }
 
     private float getMovement(Keyboard keyboard) {
@@ -76,5 +106,53 @@ public class State {
         }
 
         return mvpCache;
+    }
+
+    public void render() {
+        Animation animation = currentAnimation();
+        Set<Cube> animatedCubes;
+        if (animation != null) {
+            animatedCubes = animation.cubes();
+            animatedCubes.forEach(c -> render(animation, c));
+        } else {
+            animatedCubes = Collections.emptySet();
+        }
+
+        rubik.cubes().stream()
+            .filter(c -> !animatedCubes.contains(c))
+            .forEach(c -> render(cubeRenderer, c));
+    }
+
+    private <T> void render(Renderer<T> renderer, T element) {
+        float[] vertices = renderer.prepare(this, element);
+        cubeRenderer.render(this, vertices);
+        cubeRenderer.cleanup();
+    }
+
+    public void tick() {
+        keyboard.tick();
+
+        if (currentAnimation() != null) {
+            currentAnimation.tick();
+            if (currentAnimation.done()) {
+                currentAnimation = null;
+            }
+        }
+    }
+
+    private Animation currentAnimation() {
+        if (currentAnimation != null) {
+            return currentAnimation;
+        }
+        return currentAnimation = animations.pollLast();
+    }
+
+
+    public void init() {
+        cubeRenderer.init();
+    }
+
+    public void close() {
+        cubeRenderer.close();
     }
 }

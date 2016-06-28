@@ -1,10 +1,10 @@
 package be.bendem.jrubik.ui.utils;
 
-import be.bendem.jrubik.utils.ArrayBaked;
+import be.bendem.jrubik.utils.FloatArrayBaked;
 
 import java.util.Arrays;
 
-public class Point implements ArrayBaked {
+public class Point implements FloatArrayBaked {
 
     public static Point at(float x, float y, float z) {
         return new Point(x, y, z);
@@ -33,13 +33,8 @@ public class Point implements ArrayBaked {
     }
 
     @Override
-    public float[] array() {
-        return Arrays.copyOf(coords, coords.length);
-    }
-
-    @Override
-    public float[] array(float[] array, int offset) {
-        return ArrayBaked.copy(coords, array, offset);
+    public float[] weakArray() {
+        return coords;
     }
 
     @Override

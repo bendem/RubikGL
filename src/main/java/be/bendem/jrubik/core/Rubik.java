@@ -1,8 +1,13 @@
 package be.bendem.jrubik.core;
 
+import be.bendem.jrubik.ui.utils.Matrices;
+import org.joml.Matrix3f;
+import org.joml.Vector3f;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static be.bendem.jrubik.core.Color.BLUE;
 import static be.bendem.jrubik.core.Color.GREEN;
@@ -57,8 +62,28 @@ public class Rubik {
         return Collections.unmodifiableList(cubes);
     }
 
-    public Rubik rotate(Face face, Direction direction) {
-        // TODO
+    public Stream<Cube> forSlice(Slice slice) {
+        return cubes().stream()
+            .filter(c -> slice.matches(c.position()));
+    }
+
+    public Rubik rotate(Slice slice, Direction direction) {
+        Matrix3f rotation = Matrices.rotation(slice.plane(), (float) (Math.PI * .5), new Matrix3f());
+        forSlice(slice)
+            .forEach(c -> {
+                // TODO Update position
+                Position position = c.position();
+                Vector3f rotated = new Vector3f(
+                    position.x(), position.y(), position.z())
+                    .mul(rotation);
+
+                position
+                    .x(Math.round(rotated.x))
+                    .y(Math.round(rotated.y))
+                    .z(Math.round(rotated.z));
+
+                c.rotation().rotate(slice.plane());
+            });
 
         return this;
     }

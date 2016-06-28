@@ -85,7 +85,7 @@ public class Keyboard {
                 .computeIfAbsent(key, k -> new HashSet<>()));
     }
 
-    public void pulse() {
+    public void tick() {
         Map<Integer, Collection<Handler>> onHold = handlers
             .getOrDefault(Event.KEY_HELD, Collections.emptyMap());
 

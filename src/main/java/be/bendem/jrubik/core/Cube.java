@@ -15,7 +15,7 @@ public class Cube {
         private int x = 0;
         private int y = 0;
         private int z = 0;
-        private Orientation orientation = Orientation.FRONT;
+        private Rotation rotation = new Rotation();
 
         private CubeBuilder() {}
 
@@ -64,8 +64,8 @@ public class Cube {
             return this;
         }
 
-        public CubeBuilder orientation(Orientation orientation) {
-            this.orientation = orientation;
+        public CubeBuilder rotation(Rotation rotation) {
+            this.rotation = rotation;
             return this;
         }
 
@@ -77,7 +77,7 @@ public class Cube {
             colors.put(Face.BACK, back);
             colors.put(Face.RIGHT, right);
             colors.put(Face.BOTTOM, bottom);
-            return new Cube(colors, new Position(x, y, z), orientation);
+            return new Cube(colors, new Position(x, y, z), rotation);
         }
     }
 
@@ -87,12 +87,12 @@ public class Cube {
 
     private Map<Face, Color> colors;
     private Position position;
-    private Orientation orientation;
+    private Rotation rotation;
 
-    private Cube(Map<Face, Color> colors, Position position, Orientation orientation) {
+    private Cube(Map<Face, Color> colors, Position position, Rotation rotation) {
         this.colors = colors;
         this.position = position;
-        this.orientation = orientation;
+        this.rotation = rotation;
     }
 
     public Map<Face, Color> colors() {
@@ -103,13 +103,15 @@ public class Cube {
         return position;
     }
 
-    public Orientation orientation() {
-        return orientation;
+    public Rotation rotation() {
+        return rotation;
     }
 
-    public Cube orientation(Orientation orientation) {
-        this.orientation = orientation;
-        return this;
+    @Override
+    public String toString() {
+        return "Cube{" +
+            "position=" + position +
+            ", rotation=" + rotation +
+            '}';
     }
-
 }
