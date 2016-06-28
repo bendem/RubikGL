@@ -24,4 +24,11 @@ public class Slice {
         return plane.get(position::z, position::y, position::x) == offset;
     }
 
+    @Override
+    public String toString() {
+        return "Slice{" +
+            "plane=" + plane +
+            ", offset=" + offset +
+            '}';
+    }
 }

@@ -49,4 +49,11 @@ public class Point implements FloatArrayBaked {
     public int hashCode() {
         return Arrays.hashCode(coords);
     }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+            "coords=" + Arrays.toString(coords) +
+            '}';
+    }
 }

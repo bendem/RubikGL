@@ -110,7 +110,8 @@ public class Cube {
     @Override
     public String toString() {
         return "Cube{" +
-            "position=" + position +
+            "colors=" + colors +
+            ", position=" + position +
             ", rotation=" + rotation +
             '}';
     }

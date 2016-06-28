@@ -2,6 +2,8 @@ package be.bendem.jrubik.core;
 
 import be.bendem.jrubik.utils.IntArrayBaked;
 
+import java.util.Arrays;
+
 public class Position implements IntArrayBaked {
 
     private final int[] coords;
@@ -45,5 +47,12 @@ public class Position implements IntArrayBaked {
     @Override
     public int[] weakArray() {
         return coords;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+            "coords=" + Arrays.toString(coords) +
+            '}';
     }
 }
