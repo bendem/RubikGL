@@ -2,7 +2,7 @@
 
 **Very WIP**
 
-![Rubik](https://i.imgur.com/NpZv5JW.gif)
+![Rubik](https://i.imgur.com/fLfKcI2.gif)
 
 ### Building
 
