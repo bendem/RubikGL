@@ -39,8 +39,8 @@ public class Rotation {
     }
 
     public Face apply(Face face) {
-        for (Axis rotation : rotations) {
-            switch (rotation) {
+        for (int i = 0; i < rotations.size(); i++) {
+            switch (rotations.get(i)) {
             case X: face = face.nextYZ(); break;
             case Y: face = face.nextXZ(); break;
             case Z: face = face.nextXY(); break;
