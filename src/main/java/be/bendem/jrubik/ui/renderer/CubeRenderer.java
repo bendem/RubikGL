@@ -5,6 +5,7 @@ import be.bendem.jrubik.core.Cube;
 import be.bendem.jrubik.core.Face;
 import be.bendem.jrubik.core.Position;
 import be.bendem.jrubik.core.Rotation;
+import be.bendem.jrubik.ui.Animation;
 import be.bendem.jrubik.ui.State;
 import be.bendem.jrubik.ui.utils.Point;
 import be.bendem.jrubik.ui.utils.Shader;
@@ -12,6 +13,7 @@ import be.bendem.jrubik.ui.utils.Shaders;
 import be.bendem.jrubik.ui.utils.Shapes;
 import org.lwjgl.system.MemoryUtil;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static org.lwjgl.opengles.GLES20.*;
@@ -27,8 +29,10 @@ public class CubeRenderer implements Renderer<Cube> {
 
     private final float[] vertices = new float[108];
     private final float[] colors = new float[108];
+    private final float[] rotation = new float[3];
     private int program;
     private int matrix;
+    private int rotationAngles;
     private int vertexBuffer;
     private int colorBuffer;
 
@@ -40,6 +44,7 @@ public class CubeRenderer implements Renderer<Cube> {
         }
 
         matrix = glGetUniformLocation(program, "mvp");
+        rotationAngles = glGetUniformLocation(program, "rotationAngles");
 
         vertexBuffer = glGenBuffers();
         colorBuffer = glGenBuffers();
@@ -50,6 +55,12 @@ public class CubeRenderer implements Renderer<Cube> {
         Shapes.rect(normalizePosition(cube.position()), CUBE_SIZE, vertices);
         applyRotation(cube.colors(), cube.rotation());
 
+        Animation animation = state.currentAnimation();
+        Arrays.fill(rotation, 0);
+        if (animation != null && animation.cubes().contains(cube)) {
+            animation.rotations(rotation);
+        }
+
         return vertices;
     }
 
@@ -58,6 +69,7 @@ public class CubeRenderer implements Renderer<Cube> {
         glUseProgram(program);
 
         glUniformMatrix4fv(matrix, false, state.computeMvpMatrix());
+        glUniform3fv(rotationAngles, rotation);
 
         // bind parameter 0 to vertices array
         glEnableVertexAttribArray(0);
@@ -80,7 +92,7 @@ public class CubeRenderer implements Renderer<Cube> {
     public void cleanup() {}
 
     private Point normalizePosition(Position position) {
-        return Point.at(
+        return Point.at( // NOTE Allocation churn here
             normalizeCoordinate(position.x()),
             normalizeCoordinate(position.y()),
             normalizeCoordinate(position.z()));
@@ -96,7 +108,7 @@ public class CubeRenderer implements Renderer<Cube> {
     }
 
     private float[] applyRotation(Map<Face, Color> colorPerFace, Rotation rotation) {
-        colorPerFace.forEach((face, color) -> {
+        colorPerFace.forEach((face, color) -> { // NOTE Allocation churn here (the iterator)
             Face rotated = rotation.apply(face);
             int i = getIndexForRotation(rotated);
             color.array(colors, i);

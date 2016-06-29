@@ -12,10 +12,9 @@ import org.lwjgl.opengles.GLES20;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import static be.bendem.jrubik.ui.Keyboard.Event.KEY_HELD;
 import static be.bendem.jrubik.ui.Keyboard.Event.KEY_PRESSED;
@@ -110,18 +109,10 @@ public class State {
     }
 
     public void render() {
-        Animation animation = currentAnimation();
-        Set<Cube> animatedCubes;
-        if (animation != null) {
-            animatedCubes = animation.cubes();
-            animatedCubes.forEach(c -> render(animation, c));
-        } else {
-            animatedCubes = Collections.emptySet();
+        List<Cube> cubes = rubik.cubes();
+        for (int i = 0; i < cubes.size(); i++) {
+            render(cubeRenderer, cubes.get(i));
         }
-
-        rubik.cubes().stream()
-            .filter(c -> !animatedCubes.contains(c))
-            .forEach(c -> render(cubeRenderer, c));
     }
 
     private <T> void render(Renderer<T> renderer, T element) {
@@ -141,7 +132,7 @@ public class State {
         }
     }
 
-    private Animation currentAnimation() {
+    public Animation currentAnimation() {
         if (currentAnimation != null) {
             return currentAnimation;
         }
